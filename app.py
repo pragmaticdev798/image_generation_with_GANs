@@ -385,10 +385,31 @@ if __name__ == '__main__':
     print(f"Output Dir: {OUTPUT_DIR}")
     print("="*60 + "\n")
     
-    # run flask app
+# application startup
+
+if __name__ == '__main__':
+    # create necessary directories
+    os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(SAMPLES_DIR, exist_ok=True)
+    
+    print("\n" + "="*60)
+    print("DCGAN Face Generation Web Application")
+    print("="*60)
+    print(f"Device: {DEVICE}")
+    print(f"Checkpoint Dir: {CHECKPOINT_DIR}")
+    print(f"Samples Dir: {SAMPLES_DIR}")
+    print(f"Output Dir: {OUTPUT_DIR}")
+    print("="*60 + "\n")
+    
+    # run flask app (development only)
     app.run(
         debug=False,
         host='0.0.0.0',
-        port=int(os.environ.get('PORT', 5000)),
-        use_reloader=False
+        port=int(os.environ.get('PORT', 5000))
     )
+else:
+    # production: create necessary directories
+    os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(SAMPLES_DIR, exist_ok=True)
