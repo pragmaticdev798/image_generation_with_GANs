@@ -263,6 +263,11 @@ def api_generate():
                 'filename': filename
             })
         
+        # Clean up memory
+        del images
+        import gc
+        gc.collect()
+        
         return jsonify({
             'success': True,
             'message': f'Generated {num_images} images successfully',
