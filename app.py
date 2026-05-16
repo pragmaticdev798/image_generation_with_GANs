@@ -58,6 +58,11 @@ def load_generator_model(checkpoint_path):
     """
     global generator, model_config
     
+    # If a model is already loaded, and it's the same one, return it
+    if generator is not None and model_config['checkpoint_path'] == checkpoint_path:
+        print("✓ Generator model is already loaded.")
+        return generator
+    
     try:
         print(f"Loading generator from: {checkpoint_path}")
         
@@ -94,12 +99,31 @@ def load_generator_model(checkpoint_path):
             return gen
         else:
             print(f"✗ Checkpoint file not found: {checkpoint_path}")
+            model_config['is_loaded'] = False
+            model_config['checkpoint_path'] = None
+            generator = None
             return None
             
     except Exception as e:
         print(f"✗ Error loading generator: {str(e)}")
-
+        model_config['is_loaded'] = False
+        model_config['checkpoint_path'] = None
+        generator = None
         return None
+
+
+def unload_generator_model():
+    """Unload the generator model and free up memory."""
+    global generator, model_config
+    if generator is not None:
+        del generator
+        generator = None
+        model_config['is_loaded'] = False
+        model_config['checkpoint_path'] = None
+        import gc
+        gc.collect()
+        torch.cuda.empty_cache()  # If using GPU
+        print("✓ Generator model unloaded and memory freed.")
 
 
 def generate_faces(num_images=5, seed=None):
